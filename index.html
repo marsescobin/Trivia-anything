@@ -1,16 +1,30 @@
 <html>
   <head>
-    <title></title>
+    <title>Trivia Anything!</title>
+    <link rel="stylesheet" type="text/css" href="./style.css" />
   </head>
   <body>
-    <h1>Guess the word</h1>
-    <h3 id="question"></h3>
-    <p id="answer"></p>
-    <button id="start-btn">Start</button>
-    <form id="myForm">
-      <input type="text" id="myInput" placeholder="Type something..." />
-      <button type="submit" id="submitButton">Submit</button>
-    </form>
+    <main>
+      <h1>Guess teh word</h1>
+      <h3 id="question"></h3>
+      <p id="answer"></p>
+      <button id="start-btn">Start</button>
+      <form id="myForm">
+        <input type="text" id="myInput" placeholder="Type something..." />
+        <button type="submit" id="submitButton">Submit</button>
+        <button id="change-category-btn">Change questions category</button>
+      </form>
+    </main>
+    <section>
+      <form id="category-form">
+        <input
+          type="text"
+          id="input-category"
+          placeholder="Which topic would you like?"
+        />
+        <button type="submit" id="submitButton">Submit</button>
+      </form>
+    </section>
     <script src="index.js" type="module"></script>
   </body>
 </html>
