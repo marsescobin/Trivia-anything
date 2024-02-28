@@ -6,6 +6,12 @@ const myKey = config.API_KEY;
 let word = "sample";
 const answer = document.getElementById("answer");
 const question = document.getElementById("question");
+const form = document.getElementById("myForm");
+const input = document.getElementById("myInput");
+const submitButton = document.getElementById("submitButton");
+const startBtn = document.getElementById("start-btn");
+
+form.addEventListener("submit", handleFormSubmit);
 
 function createQuiz(topic, number = 5) {
   const url = "https://api.openai.com/v1/chat/completions";
@@ -38,8 +44,6 @@ function createQuiz(topic, number = 5) {
     });
 }
 
-createQuiz("heart surgery");
-
 let randomIndexes = [];
 function generateRandomIndex(word) {
   const letters = word.split("");
@@ -70,4 +74,12 @@ function generateWord(word) {
   });
   console.log(blanks.join(" "));
   return blanks.join(" ");
+}
+
+function handleFormSubmit(event) {
+  event.preventDefault();
+  const userInput = input.value;
+  if (userInput === "/start") {
+    console.log("start");
+  }
 }
