@@ -1,8 +1,27 @@
 import questions from "./Questions.js";
 import config from "./config.js";
 
-localStorage.setItem("currentQuestions", JSON.stringify(questions));
-let currentQuestions = JSON.parse(localStorage.getItem("currentQuestions"));
+let currentQuestions;
+let questionsArray;
+let answerArray;
+let n;
+
+if (localStorage.getItem("currentQuestions") === null) {
+  localStorage.setItem("currentQuestions", JSON.stringify(questions));
+  currentQuestions = JSON.parse(
+    localStorage.setItem("currentQuestions", currentQuestionsStringified)
+  );
+
+  questionsArray = currentQuestions.map((Q) => Q.Q);
+  answerArray = currentQuestions.map((Q) => Q.A);
+  n = 0;
+} else {
+  console.log(JSON.parse(localStorage.getItem("currentQuestions")));
+  currentQuestions = JSON.parse(localStorage.getItem("currentQuestions"));
+  questionsArray = currentQuestions.map((Q) => Q.Q);
+  answerArray = currentQuestions.map((Q) => Q.A);
+  n = 0;
+}
 
 const myKey = config.API_KEY;
 
@@ -17,10 +36,6 @@ const startBtn = document.getElementById("start-btn");
 const changeCategoryBtn = document.getElementById("change-category-btn");
 const categoryForm = document.getElementById("category-form");
 const inputCategory = document.getElementById("input-category");
-
-const questionsArray = currentQuestions.map((Q) => Q.Q);
-const answerArray = currentQuestions.map((Q) => Q.A);
-let n = 0;
 
 form.addEventListener("submit", handleFormSubmit);
 
@@ -40,13 +55,9 @@ categoryForm.addEventListener("submit", handleChangeCategory);
 
 function handleChangeCategory(event) {
   event.preventDefault();
-  const newQuestions = createQuiz(inputCategory.value);
-  console.log(newQuestions);
-  localStorage.setItem("currentQuestions", JSON.stringify(newQuestions));
+  createQuiz(inputCategory.value);
   inputCategory.value = "";
 }
-
-console.log(questionsArray);
 
 function handleFormSubmit(event) {
   event.preventDefault();
@@ -68,8 +79,7 @@ function handleFormSubmit(event) {
 function createQuiz(topic, number = 5) {
   const url = "https://api.openai.com/v1/chat/completions";
   const bearer = "Bearer " + myKey;
-  const prompt = `Give me ${number} trivia questions about ${topic} in Q & A form
-    No 2 questions should have the same answer and it should be on a JSON format
+  const prompt = `Give me ${number} trivia questions about ${topic} in Q & A form but in JSON format. 
   ###
   [{
     "Q": "What is the capital city of Mexico?",
@@ -90,9 +100,27 @@ function createQuiz(topic, number = 5) {
     }),
   })
     .then((response) => response.json())
-    .then((data) => data.choices[0].message.content)
+    .then((data) => {
+      const newQuestions = JSON.parse(data.choices[0].message.content); // Parse it to an array
+      console.log(newQuestions);
+      localStorage.setItem("currentQuestions", JSON.stringify(newQuestions)); // Store the array
+      questionsArray = JSON.parse(localStorage.getItem("currentQuestions")).map(
+        (Q) => Q.Q
+      );
+      answerArray = currentQuestions.map((Q) => Q.A);
+      n = 0;
+      question.textContent = questionsArray[n]; // Update UI
+      answer.textContent = generateWord(answerArray[n]); // Update UI
+      const confirmation = document.getElementById("confirmation-message");
+      confirmation.innerHTML = `Success!Category has been changed  <button id="ok">Ok</button>;`;
+      const okButton = document.getElementById("ok");
+      okButton.addEventListener("click", function () {
+        main.style.display = "flex";
+        categoryForm.style.display = "none";
+      });
+    })
     .catch((error) => {
-      console.log("Something bad happened " + error);
+      console.log("Something bad happened: " + error);
     });
 }
 let randomIndexes = [];
@@ -113,7 +141,6 @@ function generateRandomIndex(word) {
 }
 
 function generateWord(word) {
-  /**generateRandomIndex(word);**/
   let letters = word.split("");
   let blanks = letters.map(function (letter, index) {
     if (randomIndexes.includes(index)) {
@@ -122,7 +149,6 @@ function generateWord(word) {
       return "_";
     }
   });
-  console.log(blanks.join(" "));
   return blanks.join(" ");
 }
 
@@ -130,7 +156,8 @@ function generateWord(word) {
 //get local storage werkin
 // squash obvious bugs
 // get CSS in! Ahhh exciting!🤩
-//assignment:
+
+//Start your refactor here:
 //rename functions
 //rename elements both in html and in js
 //
