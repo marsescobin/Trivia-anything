@@ -1,3 +1,65 @@
+* {
+  font-family: "Comfortaa", sans-serif;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  background: #fff19f;
+}
+
+main,
+section {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  margin: auto;
+  background: #ffe505;
+  padding: 2rem;
+  border-radius: 2rem;
+}
+
+main {
+  height: 80vh;
+  justify-content: space-between;
+}
+
+main,
+div {
+  text-align: center;
+}
+
+h1 {
+  margin: 4rem;
+}
+
+input {
+  width: 80%;
+  border: 1px solid ivory;
+  border-radius: 0.5rem;
+}
+
+form {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 4rem;
+}
+
+button {
+  background: #0096ff;
+  padding: 0.5rem 2rem;
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+}
+
+body > * {
+  position: relative;
+  top: 15%;
+}
+
 #myForm {
   display: none;
 }

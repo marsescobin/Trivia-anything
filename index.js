@@ -1,27 +1,14 @@
 import questions from "./Questions.js";
 import config from "./config.js";
 
-let currentQuestions;
-let questionsArray;
-let answerArray;
-let n;
-
-if (localStorage.getItem("currentQuestions") === null) {
+if (!localStorage.getItem("currentQuestions")) {
   localStorage.setItem("currentQuestions", JSON.stringify(questions));
-  currentQuestions = JSON.parse(
-    localStorage.setItem("currentQuestions", currentQuestionsStringified)
-  );
-
-  questionsArray = currentQuestions.map((Q) => Q.Q);
-  answerArray = currentQuestions.map((Q) => Q.A);
-  n = 0;
-} else {
-  console.log(JSON.parse(localStorage.getItem("currentQuestions")));
-  currentQuestions = JSON.parse(localStorage.getItem("currentQuestions"));
-  questionsArray = currentQuestions.map((Q) => Q.Q);
-  answerArray = currentQuestions.map((Q) => Q.A);
-  n = 0;
 }
+
+let currentQuestions = JSON.parse(localStorage.getItem("currentQuestions"));
+let questionsArray = currentQuestions.map((Q) => Q.Q);
+let answerArray = currentQuestions.map((Q) => Q.A);
+let n = 0;
 
 const myKey = config.API_KEY;
 
@@ -65,17 +52,23 @@ function handleFormSubmit(event) {
     generateRandomIndex(answerArray[n]);
     answer.textContent = generateWord(answerArray[n]);
     input.value = "";
-    console.log(randomIndexes);
+    console.log(randomIndexes.length);
+    console.log(answerArray[n].length);
   } else {
     n += 1;
     randomIndexes = [];
     question.textContent = questionsArray[n];
     answer.textContent = generateWord(answerArray[n]);
     input.value = "";
-    console.log(randomIndexes);
   }
 }
 
+function nextQuestion() {
+  randomIndexes = [];
+  n += 1;
+  question.textContent = questionsArray[n];
+  answer.textContent = generateWord(answerArray[n]);
+}
 function createQuiz(topic, number = 5) {
   const url = "https://api.openai.com/v1/chat/completions";
   const bearer = "Bearer " + myKey;
@@ -101,22 +94,24 @@ function createQuiz(topic, number = 5) {
   })
     .then((response) => response.json())
     .then((data) => {
-      const newQuestions = JSON.parse(data.choices[0].message.content); // Parse it to an array
-      console.log(newQuestions);
-      localStorage.setItem("currentQuestions", JSON.stringify(newQuestions)); // Store the array
+      const newQuestions = JSON.parse(data.choices[0].message.content); //extract questions
+      localStorage.setItem("currentQuestions", JSON.stringify(newQuestions)); // Store as string so local storage would take it
       questionsArray = JSON.parse(localStorage.getItem("currentQuestions")).map(
         (Q) => Q.Q
       );
-      answerArray = currentQuestions.map((Q) => Q.A);
+      answerArray = JSON.parse(localStorage.getItem("currentQuestions")).map(
+        (Q) => Q.A
+      );
       n = 0;
       question.textContent = questionsArray[n]; // Update UI
       answer.textContent = generateWord(answerArray[n]); // Update UI
       const confirmation = document.getElementById("confirmation-message");
-      confirmation.innerHTML = `Success!Category has been changed  <button id="ok">Ok</button>;`;
+      confirmation.innerHTML = `<p>Success!Category has been changed</p><button id="ok">Ok</button>`;
       const okButton = document.getElementById("ok");
       okButton.addEventListener("click", function () {
         main.style.display = "flex";
         categoryForm.style.display = "none";
+        confirmation.style.display = "none";
       });
     })
     .catch((error) => {
@@ -129,7 +124,7 @@ function generateRandomIndex(word) {
   // Ensure we don't loop infinitely
   if (randomIndexes.length >= letters.length) {
     console.log("All possible indexes have been generated.");
-    return;
+    return nextQuestion();
   }
   const randomIndex = Math.floor(Math.random() * letters.length);
   if (!randomIndexes.includes(randomIndex)) {
@@ -153,7 +148,7 @@ function generateWord(word) {
 }
 
 //up next:
-//get local storage werkin
+//get local storage werkin ✅
 // squash obvious bugs
 // get CSS in! Ahhh exciting!🤩
 
@@ -161,3 +156,9 @@ function generateWord(word) {
 //rename functions
 //rename elements both in html and in js
 //
+
+//Bugs to squash
+//Something bad happened: SyntaxError: Unexpected token '`', "```json ["... is not valid JSON
+//When all questions are done, it doesn't know what to do next
+// capitalization
+// spacing

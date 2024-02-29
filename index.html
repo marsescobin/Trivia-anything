@@ -2,20 +2,27 @@
   <head>
     <title>Trivia Anything!</title>
     <link rel="stylesheet" type="text/css" href="./style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
     <main>
-      <h1>Guess teh word</h1>
-      <h3 id="question"></h3>
-      <p id="answer"></p>
-      <button id="start-btn">Start</button>
-      <form id="myForm">
-        <input type="text" id="myInput" placeholder="Type something..." />
-        <button type="submit" id="submitButton">Submit</button>
-        <button type="button" id="change-category-btn">
-          Change questions category
-        </button>
-      </form>
+      <div>
+        <h1>Guess the word</h1>
+        <h3 id="question"></h3>
+        <p id="answer"></p>
+        <button id="start-btn">Start</button>
+        <form id="myForm">
+          <input type="text" id="myInput" placeholder="Type something..." />
+          <button type="submit" id="submitButton">Submit</button>
+        </form>
+      </div>
+      <button type="button" id="change-category-btn">
+        Change questions category
+      </button>
     </main>
     <section>
       <form id="category-form">
@@ -26,7 +33,7 @@
         />
         <button type="submit" id="submitButton">Submit</button>
       </form>
-      <p id="confirmation-message"></p>
+      <div id="confirmation-message"></div>
     </section>
     <script src="index.js" type="module"></script>
   </body>
